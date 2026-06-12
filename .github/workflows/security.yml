@@ -18,5 +18,5 @@ jobs:
         run: pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep scan --config .semgrep/block-command-injection.yml .
+        run: semgrep scan --config .semgrep.yml .
 
