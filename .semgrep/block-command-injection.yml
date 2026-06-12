@@ -1,0 +1,17 @@
+rules:
+  - id: block-command-injection
+    mode: taint
+
+    pattern-sources:
+      - pattern: req.query.$X
+      - pattern: req.body.$X
+      - pattern: req.params.$X
+
+    pattern-sinks:
+      - pattern: exec($X)
+
+    message: User-controlled input reaches exec(). Potential command injection.
+    severity: ERROR
+
+    languages:
+      - javascript

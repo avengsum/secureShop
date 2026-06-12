@@ -1,0 +1,9 @@
+rules:
+  - id: block-eval
+    pattern: eval($X)
+
+    message: Avoid using eval(). It can lead to code execution vulnerabilities.
+    severity: ERROR
+
+    languages:
+      - javascript

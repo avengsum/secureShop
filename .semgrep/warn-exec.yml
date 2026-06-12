@@ -1,0 +1,15 @@
+rules:
+  - id: warn-exec
+
+    patterns:
+      - pattern: exec($X)
+
+      - pattern-not: exec("date")
+      - pattern-not: exec("hostname")
+      - pattern-not: exec("uptime")
+
+    message: Review exec() usage to ensure it is not attacker controlled.
+    severity: WARNING
+
+    languages:
+      - javascript

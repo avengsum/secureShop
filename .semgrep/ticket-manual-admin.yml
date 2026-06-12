@@ -1,0 +1,12 @@
+rules:
+  - id: manual-admin-check
+
+    pattern-either:
+      - pattern: req.user.role === "admin"
+      - pattern: req.user.role == "admin"
+
+    message: Use Authz.isAdmin() instead of checking roles manually.
+    severity: WARNING
+
+    languages:
+      - javascript
