@@ -150,3 +150,13 @@ app.get("/fetch", async (req, res) => {
   res.send(data);
 });
 
+app.get("/", (req, res) => {
+    res.send(`
+        <h1>SecureShop</h1>
+
+        <a href="/health">Health</a>
+        <a href="/profile?id=1">Profile</a>
+        <a href="/download?path=test.txt">Download</a>
+    `);
+});
+
