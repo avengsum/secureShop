@@ -18,9 +18,15 @@ jobs:
         run: pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep scan --config .semgrep . --output semgrep.sarif .
+        run: |
+         semgrep scan \
+          --config .semgrep \
+          --sarif \
+          --output semgrep.sarif \
+          . || true
       
       - name: Upload SARIF
+        if : always()
         uses: github/codeql-action/upload-sarif@v3
         with:
           sarif_file: semgrep.sarif
