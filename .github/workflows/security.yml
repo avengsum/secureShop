@@ -32,6 +32,10 @@ jobs:
         with:
           scan-type: fs
           scan-ref: .
-          format: table
+          format: json
+          output: trivy-output.json
           exit-code: 0
+
+      - name: Apply Trivy polices
+        run : python scripts/trivy-policies.py
 
