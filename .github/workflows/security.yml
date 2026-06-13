@@ -33,7 +33,7 @@ jobs:
           scan-type: fs
           scan-ref: .
           format: json
-          output: trivy-output.json
+          output: trivy-results.json
           exit-code: 0
 
       - name: Apply Trivy polices
