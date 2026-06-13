@@ -38,4 +38,34 @@ jobs:
 
       - name: Apply Trivy polices
         run : python scripts/trivy-policies.py
+  
+  zap:
+    runs-on: ubuntu-latest
+    needs:
+    - semgrep
+    - trivy
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup Node
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Start application
+      run: |
+        node app.js &
+        sleep 15
+
+    - name: ZAP Baseline Scan
+      uses: zaproxy/action-baseline@v0.12.0
+      with:
+        target: "http://localhost:3000"
+        fail_action: false
+
 
