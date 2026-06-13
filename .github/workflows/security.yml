@@ -18,7 +18,12 @@ jobs:
         run: pip install semgrep
 
       - name: Run Semgrep
-        run: semgrep scan --config .semgrep.yml .
+        run: semgrep scan --config .semgrep.yml . --output semgraph.sarif
+      
+      - name: Upload SARIF
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep.sarif
   
   trivy:
     runs-on: ubuntu-latest
