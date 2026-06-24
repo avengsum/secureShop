@@ -1,0 +1,33 @@
+rules:
+  - id: sqli-from-user-input
+    mode: taint
+    severity: ERROR
+
+    metadata:
+      cwe:
+        - "CWE-89: Improper Neutralization of Special Elements used in an SQL Command"
+      owasp:
+        - A03:2021 - Injection
+      confidence: HIGH
+
+    message: >
+      User input is being directly concatenated into a SQL query. 
+      This leads to SQL Injection. Always use parameterized queries (e.g. `db.prepare("SELECT * FROM users WHERE id = ?").get(id)`).
+
+    pattern-sources:
+      - pattern: req.query.$PARAM
+      - pattern: req.body.$PARAM
+      - pattern: req.params.$PARAM
+
+    pattern-sinks:
+      - patterns:
+          - pattern-either:
+              - pattern: $DB.prepare( `$SQL` )
+              - pattern: $DB.exec( `$SQL` )
+              - pattern: $DB.query( `$SQL` )
+          - metavariable-pattern:
+              metavariable: $SQL
+              pattern: <... $INPUT ...> # Matches any template literal that includes a variable
+
+    languages:
+      - javascript

@@ -1,0 +1,45 @@
+rules:
+  - id: command-injection-from-user-input
+    mode: taint
+    severity: ERROR
+
+    metadata:
+      cwe:
+        - "CWE-78: Improper Neutralization of Special Elements used in an OS Command"
+      owasp:
+        - A03:2021 - Injection
+      confidence: HIGH
+      impact: HIGH
+      category: security
+      technology:
+        - express
+        - nodejs
+      references:
+        - https://owasp.org/Top10/A03_2021-Injection/
+
+    message: >
+      User-controlled input from `$SOURCE` reaches `$SINK` without sanitization.
+      This allows an attacker to execute arbitrary OS commands on the server.
+      Use `execFile()` with an argument array instead of string interpolation.
+
+    pattern-sources:
+      - pattern: req.query.$PARAM
+      - pattern: req.body.$PARAM
+      - pattern: req.params.$PARAM
+      - pattern: req.headers.$HEADER
+
+    pattern-sanitizers:
+      - pattern: parseInt(...)
+      - pattern: Number(...)
+
+    pattern-sinks:
+      - pattern: exec($CMD, ...)
+      - pattern: execSync($CMD, ...)
+      - pattern: spawn($CMD, ...)
+
+    fix: |
+      // Refactor to use execFile with an array of arguments to prevent injection
+      // execFile('command', [arg1, arg2], callback)
+
+    languages:
+      - javascript

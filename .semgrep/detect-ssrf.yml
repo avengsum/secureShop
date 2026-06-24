@@ -1,0 +1,30 @@
+rules:
+  - id: ssrf-from-user-input
+    mode: taint
+    severity: ERROR
+
+    metadata:
+      cwe:
+        - "CWE-918: Server-Side Request Forgery (SSRF)"
+      owasp:
+        - A10:2021 - Server-Side Request Forgery
+      confidence: HIGH
+      impact: HIGH
+
+    message: >
+      User-controlled input from `$SOURCE` is used directly in a network request (`fetch`, `axios`, etc).
+      This allows an attacker to force the server to make requests to internal services (like AWS metadata 169.254.169.254)
+      or internal network endpoints. Validate URLs against a strict allowlist.
+
+    pattern-sources:
+      - pattern: req.query.$PARAM
+      - pattern: req.body.$PARAM
+
+    pattern-sinks:
+      - pattern: fetch($URL, ...)
+      - pattern: axios.get($URL, ...)
+      - pattern: axios.post($URL, ...)
+      - pattern: http.get($URL, ...)
+
+    languages:
+      - javascript

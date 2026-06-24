@@ -16,7 +16,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Install Semgrep
         run: pip install semgrep
@@ -30,7 +30,7 @@ jobs:
           . || true
       
       - name: Upload SARIF
-        if : always()
+        if: always()
         uses: github/codeql-action/upload-sarif@v4
         with:
           sarif_file: semgrep.sarif
@@ -40,7 +40,7 @@ jobs:
 
     steps:
       - name: Checkout code
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Run Trivy
         uses: aquasecurity/trivy-action@master
@@ -53,7 +53,39 @@ jobs:
 
       - name: Apply Trivy polices
         run : python scripts/trivy-policies.py
-  
+
+  container-scan:
+    runs-on: ubuntu-latest
+    needs: [trivy]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+      
+      - name: build docker image
+        run: docker build -t secureshop:${{github.sha}} .
+      
+      - name: Trivy container Scan
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: secureshop:${{ github.sha }}
+          scan-type: image
+          format: table
+          exit-code: 1
+          severity: CRITICAL,HIGH
+      - name: Generate SBOM 
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: secureshop:${{ github.sha }}
+          format: 'cyclonedx'
+          output: 'secureshop-sbom.json'
+      - name: Upload SBOM as Artifact
+        uses: actions/upload-artifact@v4
+        with: 
+          name: secureshop-sbom
+          path: secureshop-sbom.json
+
+
   zap:
     runs-on: ubuntu-latest
     needs:
@@ -73,13 +105,26 @@ jobs:
 
     - name: Start application
       run: |
-        node app.js &
+        node src/server.js &
         sleep 15
 
     - name: ZAP Baseline Scan
       uses: zaproxy/action-baseline@v0.12.0
       with:
         target: "http://localhost:3000"
-        fail_action: false
+        fail_action: true
+  
+  gitLeaks:
+    runs-on: ubuntu-latest
 
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v6
+        with:
+          fetch-depth: 0
+      
+      - name: Run gitLeaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 

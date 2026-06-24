@@ -1,0 +1,29 @@
+rules:
+  - id: missing-rate-limit-on-auth
+    severity: WARNING
+    
+    metadata:
+      cwe:
+        - "CWE-307: Improper Restriction of Excessive Authentication Attempts"
+      owasp:
+        - A07:2021 - Identification and Authentication Failures
+      confidence: LOW # Architectural rules often have low confidence but are good reminders
+      
+    message: >
+      Authentication endpoint found without rate limiting. 
+      Login and register endpoints should be protected by a rate limiter to prevent brute force attacks.
+      
+    patterns:
+      - pattern-either:
+          - pattern: app.post("/login", ...)
+          - pattern: router.post("/login", ...)
+          - pattern: app.post("/register", ...)
+          - pattern: router.post("/register", ...)
+      # This looks to see if express-rate-limit is imported anywhere in the same file.
+      # If it's not, it flags it.
+      - pattern-not-inside: |
+          $RATE_LIMIT = require('express-rate-limit');
+          ...
+
+    languages:
+      - javascript

@@ -1,0 +1,21 @@
+[extend]
+useDefault = true
+
+[[rules]]
+id = "secureshop-jwt-secret"
+description = "Hardcoded JWT secret assignment detected"
+regex = '''(?i)(jwt[_-]?secret|token[_-]?secret)\s*[=:]\s*["'][^"']{8,}["']'''
+tags = ["key", "JWT", "secureshop"]
+
+[[rules]]
+id = "secureshop-admin-password"
+description = "Hardcoded Admin Password detected"
+regex = '''(?i)(admin[_-]?pass(word)?)\s*[=:]\s*["'][^"']{5,}["']'''
+tags = ["password", "secureshop"]
+
+[allowlist]
+paths = [
+  '''.env.example''',
+  '''tests/.*''',
+  '''scripts/.*'''
+]

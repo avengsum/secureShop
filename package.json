@@ -1,17 +1,24 @@
 {
   "name": "secureshop",
   "version": "1.0.0",
-  "description": "",
-  "main": "app.js",
+  "description": "E-commerce API demonstrating product security engineering practices",
+  "main": "src/server.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node app.js"
+    "start": "node src/server.js",
+    "dev": "node --watch src/server.js",
+    "seed": "node src/db/seed.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "dependencies": { 
+  "dependencies": {
+    "bcryptjs": "^2.4.3",
+    "better-sqlite3": "^11.7.0",
+    "cookie-parser": "^1.4.7",
+    "dotenv": "^16.4.7",
     "express": "^5.1.0",
+    "joi": "^17.13.3",
+    "jsonwebtoken": "^9.0.2",
     "lodash": "4.17.15"
   },
-
   "author": "",
   "license": "ISC"
 }
