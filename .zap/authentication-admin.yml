@@ -30,8 +30,8 @@ env:
       users:
         - name: "admin"
           credentials:
-            email: admin@admin.com
-            password: admin1234
+            email: "admin@admin.com"
+            password: "admin1234"
   
   parameters: 
     failOnError: true
@@ -41,7 +41,7 @@ env:
 jobs:
  - type: spider
    parameters:
-    context: SecureShop Admin Context
+    context: "SecureShop Admin Context"
     user: "admin"
     maxDepth: 10
     maxDuration: 5
@@ -61,8 +61,8 @@ jobs:
  - type: report
    parameters: 
     template: "traditional-json"
-    reportDir: "zap-reports"
-    reportFile: "zap-admin.json"
+    reportDir: "/zap/wrk/zap-reports"
+    reportFile: "zap-admin-report.json"
     reportTitle: "SecureShop Admin Context Scan"
   
     

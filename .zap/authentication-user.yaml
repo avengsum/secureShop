@@ -80,9 +80,9 @@ jobs:
     parameters:
       template: "traditional-json"
 
-      reportDir: "zap-reports"
+      reportDir: "/zap/wrk/zap-reports"
       
-      reportFile: "zap-user.json"
+      reportFile: "zap-user-report.json"
       
       reportTitle: "SecureShop User Context Scan"
 

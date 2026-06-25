@@ -30,8 +30,8 @@ async function seed() {
   insertOrder.run(2, 3, 2, 30.00, "pending");
 
   console.log("Database seeded successfully!");
-  console.log("Admin user: admin@secureshop.local / admin123");
-  console.log("Normal user: alice@example.com / user123");
+  console.log("Admin user: admin@admin.com / admin1234");
+  console.log("Normal user: test@test.com / test1234");
 }
 
 seed().catch(console.error);

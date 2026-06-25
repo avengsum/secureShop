@@ -6,6 +6,7 @@ const db = require("../db");
 const config = require("../config");
 const validate = require("../middleware/validate");
 const authenticate = require("../middleware/auth");
+const rateLimiter = require("../middleware/rateLimiter");
 
 const router = Router();
 
@@ -20,7 +21,10 @@ const loginSchema = Joi.object({
   password: Joi.string().required(),
 });
 
-router.post("/register", validate(registerSchema), async (req, res) => {
+// Apply rate limiting to auth routes
+const authLimiter = rateLimiter({ windowMs: 15 * 60 * 1000, max: 5 });
+
+router.post("/register", authLimiter, validate(registerSchema), async (req, res) => {
   const { username, email, password } = req.body;
 
   const existing = db
@@ -44,7 +48,7 @@ router.post("/register", validate(registerSchema), async (req, res) => {
   });
 });
 
-router.post("/login", validate(loginSchema), async (req, res) => {
+router.post("/login", authLimiter, validate(loginSchema), async (req, res) => {
   const { email, password } = req.body;
 
   const user = db.prepare("SELECT * FROM users WHERE email = ?").get(email);
