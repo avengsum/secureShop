@@ -1,0 +1,72 @@
+env:
+  contexts:
+    - name: "SecureShop Admin Context"
+      
+      urls:
+        - "http://localhost:3000"
+      
+      includePaths:
+        - "http://localhost:3000/api/.*"
+      
+      excludePaths: []
+    
+      authentication:
+        method: "json"
+        parameters:
+          loginUrl: "http://localhost:3000/api/auth/login"
+
+          loginRequestData: '{"email":"admin@admin.com","password":"admin1234"}'
+
+        verification:
+          method: "response"
+          loggedInRegex: '\Q"message":"Logged in"\E'
+          loggedOutRegex: '\QAuthentication required\E'
+      
+      sessionManagement:
+        method: "cookie"
+        parameters:
+          cookie: "token"
+      
+      users:
+        - name: "admin"
+          credentials:
+            email: admin@admin.com
+            password: admin1234
+  
+  parameters: 
+    failOnError: true
+    failOnWarning: false
+    progressToStdout: true
+
+jobs:
+ - type: spider
+   parameters:
+    context: SecureShop Admin Context
+    user: "admin"
+    maxDepth: 10
+    maxDuration: 5
+
+ - type: passiveScan-wait
+   parameters:
+     maxDuration: 5
+ 
+ - type: activeScan
+   parameters: 
+    context: "SecureShop Admin Context"
+    user: "admin"
+    policy: "API-scan-minimal"
+    maxRuleDurationMins: 5
+    maxScanDurationInMins: 10
+
+ - type: report
+   parameters: 
+    template: "traditional-json"
+    reportDir: "zap-reports"
+    reportFile: "zap-admin.json"
+    reportTitle: "SecureShop Admin Context Scan"
+  
+    
+
+     
+
+

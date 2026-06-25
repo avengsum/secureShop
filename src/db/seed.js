@@ -8,14 +8,14 @@ async function seed() {
   db.exec("DELETE FROM products");
   db.exec("DELETE FROM users");
 
-  const adminHash = await bcrypt.hash("admin123", 10);
-  const userHash = await bcrypt.hash("user123", 10);
+  const adminHash = await bcrypt.hash("admin1234", 10);
+  const userHash = await bcrypt.hash("test1234", 10);
 
   db.prepare("INSERT INTO users (id, username, email, password_hash, role) VALUES (?, ?, ?, ?, ?)")
-    .run(1, "admin", "admin@secureshop.local", adminHash, "admin");
+    .run(1, "admin", "admin@admin.com", adminHash, "admin");
     
   db.prepare("INSERT INTO users (id, username, email, password_hash, role) VALUES (?, ?, ?, ?, ?)")
-    .run(2, "alice", "alice@example.com", userHash, "user");
+    .run(2, "test", "test@test.com", userHash, "user");
 
   const insertProduct = db.prepare("INSERT INTO products (id, name, description, price, stock, category) VALUES (?, ?, ?, ?, ?, ?)");
   

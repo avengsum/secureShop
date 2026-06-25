@@ -1,0 +1,88 @@
+env:
+  contexts:
+    - name: "SecureShop User context"
+
+      urls:
+        - "http://localhost:3000"
+      
+      includePaths: 
+        - "http://localhost:3000/api/.*"
+      
+      excludePaths:
+        - "http://localhost:3000/api/admin/.*"
+      
+      authentication:
+        method: "json"
+
+        parameters:
+          loginUrl: "http://localhost:3000/api/auth/login"
+
+          loginRequestData: '{"email":"test@test.com","password":"test1234"}'
+        
+        verification:
+          method: "response"
+
+          loggedInRegex: '\Q"message":"Logged in"\E'
+
+          loggedOutRegex: '\QAuthentication required\E'
+        
+        sessionManagement:
+          method: "cookie"
+
+          parameters:
+            cookie: "token"
+        
+        users:
+          - name: "test"
+            
+            credentials:
+              email: "test@test.com"
+              password: test1234
+  
+  parameters:
+    failOnError: true
+
+    failOnWarning: false
+
+    progressToStdout: true
+
+
+jobs:
+ 
+  - type: spider
+
+    parameters:
+      context: "SecureShop User Context"
+      user: "alice"
+
+      maxDuration: 5
+
+      maxDepth: 10
+
+  - type: passiveScan-wait
+    
+    parameters:
+      maxDuration: 5
+  
+  - type: activeScan
+    parameters:
+      Context: "SecureShop User Context"
+
+      user: "alice"
+
+      policy: "API-scan-minimal"
+
+      maxRuleDurationMins: 5
+
+      maxScanDurationInMins: 10
+  
+  - type: report
+    parameters:
+      template: "traditional-json"
+
+      reportDir: "zap-reports"
+      
+      reportFile: "zap-user.json"
+      
+      reportTitle: "SecureShop User Context Scan"
+
