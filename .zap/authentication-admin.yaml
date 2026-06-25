@@ -1,12 +1,11 @@
 env:
   contexts:
-    - name: "SecureShop User Context"
+    - name: "SecureShop Admin Context"
       urls:
         - "http://localhost:3000"
       includePaths:
         - "http://localhost:3000/api/.*"
-      excludePaths:
-        - "http://localhost:3000/api/admin/.*"
+      excludePaths: []
   parameters:
     failOnError: true
     failOnWarning: false
@@ -15,18 +14,18 @@ env:
 jobs:
   - type: authentication
     parameters:
-      context: "SecureShop User Context"
+      context: "SecureShop Admin Context"
       method: "json"
       loginUrl: "http://localhost:3000/api/auth/login"
-      loginRequestData: '{"email":"test@test.com","password":"test1234"}'
+      loginRequestData: '{"email":"admin@admin.com","password":"admin1234"}'
       verificationRegex: '\Q"message":"Logged in"\E'
       sessionManagementMethod: "cookie"
       sessionManagementParameter: "token"
-      username: "test"
+      username: "admin"
 
   - type: spider
     parameters:
-      context: "SecureShop User Context"
+      context: "SecureShop Admin Context"
       maxDuration: 5
       maxDepth: 10
 
@@ -36,7 +35,7 @@ jobs:
 
   - type: activeScan
     parameters:
-      context: "SecureShop User Context"
+      context: "SecureShop Admin Context"
       policy: "API-scan-minimal"
       maxScanDurationInMins: 10
 
@@ -44,5 +43,5 @@ jobs:
     parameters:
       template: "traditional-json"
       reportDir: "/zap/wrk/zap-reports"
-      reportFile: "zap-user-report.json"
-      reportTitle: "SecureShop User Context Scan"
+      reportFile: "zap-admin-report.json"
+      reportTitle: "SecureShop Admin Context Scan"
