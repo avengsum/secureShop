@@ -45,7 +45,6 @@ jobs:
     parameters:
       context: "SecureShop Admin Context"
       user: "admin"
-      policy: "API-scan-minimal"
       maxScanDurationInMins: 10
 
   - type: report

@@ -11,7 +11,7 @@ env:
         method: "json"
         parameters:
           loginRequestUrl: "http://localhost:3000/api/auth/login"
-          loginRequestData: '{"email":"{%username%}","password":"{%password%"}'
+          loginRequestBody: '{"email":"{%username%}","password":"{%password%"}'
         verification:
           method: "response"
           loggedInRegex: '\Q"message":"Logged in"\E'
@@ -46,7 +46,6 @@ jobs:
     parameters:
       context: "SecureShop User Context"
       user: "test"
-      policy: "API-scan-minimal"
       maxScanDurationInMins: 10
 
   - type: report
