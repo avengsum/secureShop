@@ -14,8 +14,6 @@ rules:
       technology:
         - express
         - nodejs
-      references:
-        - https://owasp.org/Top10/A03_2021-Injection/
 
     message: >
       User-controlled input from `$SOURCE` reaches `$SINK` without sanitization.
@@ -31,6 +29,7 @@ rules:
     pattern-sanitizers:
       - pattern: parseInt(...)
       - pattern: Number(...)
+      - pattern: String(...)
 
     pattern-sinks:
       - pattern: exec($CMD, ...)

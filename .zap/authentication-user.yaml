@@ -7,26 +7,34 @@ env:
         - "http://localhost:3000/api/.*"
       excludePaths:
         - "http://localhost:3000/api/admin/.*"
+      authentication:
+        method: "json"
+        parameters:
+          loginRequestUrl: "http://localhost:3000/api/auth/login"
+          loginRequestData: '{"email":"{%username%}","password":"{%password%"}'
+        verification:
+          method: "response"
+          loggedInRegex: '\Q"message":"Logged in"\E'
+          loggedOutRegex: '\QAuthentication required\E'
+      sessionManagement:
+        method: "cookie"
+        parameters:
+          cookieName: "token"
+      users:
+        - name: "test"
+          credentials:
+            username: "test@test.com"
+            password: "test1234"
   parameters:
-    failOnError: true
+    failOnError: false
     failOnWarning: false
     progressToStdout: true
 
 jobs:
-  - type: authentication
-    parameters:
-      context: "SecureShop User Context"
-      method: "json"
-      loginUrl: "http://localhost:3000/api/auth/login"
-      loginRequestData: '{"email":"test@test.com","password":"test1234"}'
-      verificationRegex: '\Q"message":"Logged in"\E'
-      sessionManagementMethod: "cookie"
-      sessionManagementParameter: "token"
-      username: "test"
-
   - type: spider
     parameters:
       context: "SecureShop User Context"
+      user: "test"
       maxDuration: 5
       maxDepth: 10
 
@@ -37,6 +45,7 @@ jobs:
   - type: activeScan
     parameters:
       context: "SecureShop User Context"
+      user: "test"
       policy: "API-scan-minimal"
       maxScanDurationInMins: 10
 

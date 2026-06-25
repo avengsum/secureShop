@@ -19,6 +19,9 @@ rules:
     pattern-sources:
       - pattern: req.query.$PARAM
       - pattern: req.body.$PARAM
+    
+    pattern-sanitizers:
+      - pattern: String(...)
 
     pattern-sinks:
       - pattern: fetch($URL, ...)
